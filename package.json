@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@azure/msal-node": "^2.9.2",
+    "@netlify/plugin-nextjs": "^5.15.12",
     "@supabase/supabase-js": "^2.43.5",
     "bcryptjs": "^2.4.3",
     "lucide-react": "^0.395.0",
