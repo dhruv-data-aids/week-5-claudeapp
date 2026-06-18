@@ -1,9 +1,21 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
-const db = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+let _db: SupabaseClient | null = null
+
+function getDb(): SupabaseClient {
+  if (_db) return _db
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!url || !key) throw new Error('Missing Supabase env vars')
+  _db = createClient(url, key)
+  return _db
+}
+
+const db = new Proxy({} as SupabaseClient, {
+  get(_, prop) {
+    return (getDb() as unknown as Record<string | symbol, unknown>)[prop]
+  },
+})
 
 export interface User {
   id: string
